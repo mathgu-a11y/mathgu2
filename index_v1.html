@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>일차방정식 활용 형성평가</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#F0F0F5;min-height:100vh;color:#111}
+.wrap{max-width:620px;margin:0 auto;padding:12px}
+.screen{display:none}.screen.active{display:block}
+.hdr{background:linear-gradient(135deg,#4338CA,#7C3AED,#0369A1);border-radius:14px;padding:20px;color:#fff;margin-bottom:12px;position:relative;overflow:hidden}
+.hdr::after{content:'';position:absolute;top:-20px;right:-20px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hdr h1{font-size:19px;font-weight:700;position:relative;margin-bottom:3px}
+.hdr p{font-size:13px;opacity:.8;position:relative}
+.card{background:#fff;border:1px solid #E2E2EC;border-radius:14px;padding:20px;margin-bottom:12px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:700;color:#6B7280;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.field input{width:100%;padding:10px 13px;border:1.5px solid #D1D5DB;border-radius:9px;font-size:15px;color:#111;outline:none;font-family:inherit}
+.field input:focus{border-color:#4338CA}
+.dg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.dc{border:2px solid #E2E2EC;border-radius:12px;padding:14px 6px;text-align:center;cursor:pointer;background:#fff;transition:all .15s}
+.dc:hover{border-color:#9CA3AF}
+.dc .ico{font-size:22px;margin-bottom:5px}
+.dc .nm{font-size:15px;font-weight:700}
+.dc .sb{font-size:11px;color:#9CA3AF;margin-top:2px}
+.dc.sel-easy{border-color:#059669;background:#ECFDF5}.dc.sel-easy .nm{color:#059669}
+.dc.sel-mid{border-color:#D97706;background:#FFFBEB}.dc.sel-mid .nm{color:#D97706}
+.dc.sel-hard{border-color:#DC2626;background:#FEF2F2}.dc.sel-hard .nm{color:#DC2626}
+.btn-go{width:100%;margin-top:14px;padding:13px;background:linear-gradient(135deg,#4338CA,#7C3AED);color:#fff;border:none;border-radius:999px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-go:active{opacity:.85}
+.btn-link{width:100%;margin-top:8px;padding:8px;background:none;border:none;font-size:13px;color:#9CA3AF;cursor:pointer;font-family:inherit}
+.qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.qlbl{font-size:13px;font-weight:700;color:#6B7280}
+.timer{padding:5px 13px;border:1.5px solid #E2E2EC;border-radius:999px;font-size:14px;font-weight:700;background:#fff}
+.timer.warn{border-color:#DC2626;color:#DC2626;background:#FEF2F2}
+.prog{height:5px;background:#E5E7EB;border-radius:3px;margin-bottom:12px;overflow:hidden}
+.progfill{height:100%;background:linear-gradient(90deg,#4338CA,#7C3AED);border-radius:3px;transition:width .4s}
+.pcrd{border-radius:12px;padding:16px;margin-bottom:10px;border:1.5px solid transparent}
+.pe{background:#ECFDF5;border-color:#6EE7B7}.pm{background:#FFFBEB;border-color:#FCD34D}.ph{background:#FEF2F2;border-color:#FCA5A5}
+.ptag{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;color:#fff;margin-bottom:10px}
+.tge{background:#059669}.tgm{background:#D97706}.tgh{background:#DC2626}
+.ptxt{font-size:15px;line-height:1.75}
+.ptbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+.ptbl th{padding:7px 10px;background:rgba(0,0,0,.07);font-weight:700;text-align:center}
+.ptbl td{padding:7px 10px;text-align:center;border-top:1px solid rgba(0,0,0,.08)}
+.spills{display:flex;gap:6px;margin-bottom:10px}
+.sp{flex:1;padding:8px 4px;border-radius:10px;border:1.5px solid #E2E2EC;text-align:center;background:#fff}
+.sp .sn{font-size:10px;color:#9CA3AF;display:block;margin-bottom:2px;font-weight:600}
+.sp .sl{font-size:11px;font-weight:700;color:#9CA3AF}
+.sp.active{border-color:#4338CA;background:#EEF2FF}.sp.active .sn,.sp.active .sl{color:#4338CA}
+.sp.done{border-color:#059669;background:#ECFDF5}.sp.done .sn,.sp.done .sl{color:#059669}
+.scrd{background:#fff;border:1.5px solid #E2E2EC;border-radius:14px;padding:18px;margin-bottom:10px}
+.shead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:14px}
+.sqtxt{font-size:14px;font-weight:700;line-height:1.55;flex:1;color:#111}
+.sbdg{flex-shrink:0;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px}
+.b1{background:#EEF2FF;color:#4338CA}.b2{background:#F5F3FF;color:#7C3AED}.b3{background:#E0F2FE;color:#0369A1}
+.tinp{display:flex;gap:8px;margin-bottom:12px}
+.tinp input{flex:1;padding:10px 13px;border:1.5px solid #D1D5DB;border-radius:9px;font-size:15px;color:#111;outline:none;font-family:inherit}
+.tinp input:focus{border-color:#4338CA}
+.chs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.ch{padding:11px 12px;border:1.5px solid #D1D5DB;border-radius:9px;cursor:pointer;font-size:13px;text-align:left;background:#fff;color:#111;font-family:inherit;line-height:1.4;transition:all .12s;width:100%}
+.ch:hover{border-color:#4338CA;background:#EEF2FF}
+.ch.sel{border-color:#4338CA;background:#EEF2FF;color:#4338CA;font-weight:600}
+.ch.correct{border-color:#059669 !important;background:#ECFDF5 !important;color:#059669 !important;font-weight:700}
+.ch.wrong{border-color:#DC2626 !important;background:#FEF2F2 !important;color:#DC2626 !important}
+.brow{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.bsub{flex:2;min-width:100px;padding:11px;background:linear-gradient(135deg,#4338CA,#7C3AED);color:#fff;border:none;border-radius:999px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.bsub:disabled{opacity:.45;cursor:default}
+.bhint{flex:1;min-width:80px;padding:11px;background:#fff;border:1.5px solid #FCD34D;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;color:#D97706;font-family:inherit}
+.bhint:disabled{opacity:.4;cursor:default}
+/* 힌트 영역 - step card 안에 포함 */
+.hint-area{margin-top:10px}
+.hint-item{padding:10px 13px;border-radius:9px;background:#FFFBEB;border:1.5px solid #FCD34D;color:#92400E;font-size:13px;margin-bottom:7px;line-height:1.6}
+.hint-item strong{display:block;font-size:11px;color:#D97706;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+/* 힌트2 객관식 */
+.hint-chs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+.hch{padding:9px 10px;border:1.5px solid #FCD34D;border-radius:8px;cursor:pointer;font-size:13px;text-align:left;background:#FFFBEB;color:#92400E;font-family:inherit;line-height:1.3;width:100%;transition:all .12s}
+.hch:hover{background:#FEF3C7;border-color:#F59E0B}
+.hch.hsel{border-color:#D97706;background:#FDE68A;font-weight:700}
+.hch.hcorrect{border-color:#059669 !important;background:#ECFDF5 !important;color:#059669 !important;font-weight:700}
+.hch.hwrong{border-color:#DC2626 !important;background:#FEF2F2 !important;color:#DC2626 !important}
+.fb{display:none;padding:11px 14px;border-radius:9px;font-size:14px;margin-bottom:10px;line-height:1.6}
+.fb.ok{background:#ECFDF5;border:1.5px solid #6EE7B7;color:#065F46}
+.fb.no{background:#FEF2F2;border:1.5px solid #FCA5A5;color:#991B1B}
+.bnext{width:100%;padding:12px;background:linear-gradient(135deg,#059669,#0369A1);color:#fff;border:none;border-radius:999px;font-size:15px;font-weight:700;cursor:pointer;display:none;margin-top:4px;font-family:inherit}
+.ov{display:none;min-height:220px;align-items:center;justify-content:center;margin:12px 0}
+.ov.show{display:flex}
+.modal{background:#fff;border:1px solid #E2E2EC;border-radius:14px;padding:28px 20px;text-align:center;width:100%;max-width:340px}
+.modal h2{font-size:19px;font-weight:700;margin-bottom:6px}
+.modal p{font-size:14px;color:#6B7280;margin-bottom:18px;line-height:1.65}
+.mbtns{display:flex;gap:8px}
+.my{flex:1;padding:11px;background:linear-gradient(135deg,#4338CA,#7C3AED);color:#fff;border:none;border-radius:999px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.mn{flex:1;padding:11px;background:#fff;border:1.5px solid #E2E2EC;border-radius:999px;font-size:14px;cursor:pointer;color:#6B7280;font-family:inherit}
+.rhero{background:linear-gradient(135deg,#4338CA,#7C3AED,#0369A1);border-radius:14px;padding:28px;color:#fff;text-align:center;margin-bottom:12px;position:relative;overflow:hidden}
+.rhero::after{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.07)}
+.rname{font-size:13px;opacity:.75;margin-bottom:5px;position:relative}
+.rscore{font-size:52px;font-weight:700;line-height:1;position:relative}
+.rmax{font-size:14px;opacity:.75;margin-top:4px;position:relative}
+.mets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.mc{background:#fff;border:1px solid #E2E2EC;border-radius:9px;padding:12px;text-align:center}
+.mcv{font-size:18px;font-weight:700}.mcl{font-size:11px;color:#9CA3AF;margin-top:3px}
+.bkd{background:#fff;border:1px solid #E2E2EC;border-radius:12px;padding:14px;margin-bottom:12px}
+.brw{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid #F3F4F6}
+.brw:last-child{border:none}
+.okc{color:#059669;font-weight:700}.noc{color:#DC2626;font-weight:700}
+.rbtns{display:flex;gap:8px}
+.rbtn{flex:1;padding:11px;border-radius:999px;font-size:14px;cursor:pointer;font-weight:700;font-family:inherit}
+.rs{background:#fff;border:1.5px solid #E2E2EC;color:#6B7280}
+.rp{background:linear-gradient(135deg,#4338CA,#7C3AED);color:#fff;border:none}
+.dhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.dhead h2{font-size:18px;font-weight:700}
+.dhead .bk{padding:7px 16px;border:1.5px solid #E2E2EC;border-radius:999px;font-size:13px;cursor:pointer;background:#fff;color:#6B7280;font-family:inherit}
+.sstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.twrap{background:#fff;border:1px solid #E2E2EC;border-radius:12px;overflow:auto;margin-bottom:10px}
+table.dt{width:100%;border-collapse:collapse;font-size:12px;min-width:440px}
+table.dt th{padding:9px 8px;background:#F9FAFB;color:#6B7280;font-weight:700;text-align:left;border-bottom:1px solid #E5E7EB;white-space:nowrap}
+table.dt td{padding:9px 8px;border-bottom:1px solid #F3F4F6;color:#111;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bdg{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700}
+.be{background:#ECFDF5;color:#059669}.bm{background:#FFFBEB;color:#D97706}.bh{background:#FEF2F2;color:#DC2626}
+.emp{padding:32px;text-align:center;color:#9CA3AF;font-size:14px;line-height:2}
+.dbtns{display:flex;gap:8px}
+.db{flex:1;padding:10px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.ds{background:#fff;border:1.5px solid #E2E2EC;color:#6B7280}
+.dp{background:linear-gradient(135deg,#4338CA,#7C3AED);color:#fff;border:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="s-login" class="screen active">
+  <div class="hdr">
+    <h1>&#119891;(x) 일차방정식 활용 형성평가</h1>
+    <p>중학교 1학년 · 미지수 설정과 방정식 세우기</p>
+  </div>
+  <div class="card">
+    <div class="field"><label>이름</label><input id="inp-name" type="text" placeholder="홍길동" autocomplete="off"></div>
+    <div class="field"><label>학번</label><input id="inp-sid" type="text" placeholder="1반 15번" autocomplete="off"></div>
+    <div class="field">
+      <label>난이도 선택</label>
+      <div class="dg">
+        <div class="dc" id="dc-easy" onclick="pickDiff('easy')"><div class="ico">🌱</div><div class="nm">하</div><div class="sb">기본 개념</div></div>
+        <div class="dc" id="dc-mid" onclick="pickDiff('mid')"><div class="ico">🔥</div><div class="nm">중</div><div class="sb">응용 문제</div></div>
+        <div class="dc" id="dc-hard" onclick="pickDiff('hard')"><div class="ico">⚡</div><div class="nm">상</div><div class="sb">심화 문제</div></div>
+      </div>
+    </div>
+    <button class="btn-go" onclick="startQuiz()">시작하기 →</button>
+    <button class="btn-link" onclick="showDash()">📊 교사용 대시보드</button>
+  </div>
+</div>
+
+<div id="s-quiz" class="screen">
+  <div class="qtop">
+    <span class="qlbl" id="qlbl">문제 1 / 3</span>
+    <span class="timer" id="timerbox">⏱ <span id="timerval">3:00</span></span>
+  </div>
+  <div class="prog"><div class="progfill" id="progfill" style="width:0%"></div></div>
+  <div id="area-prob"></div>
+  <div id="area-pills"></div>
+  <div id="area-step"></div>
+  <div id="area-fb"></div>
+  <div id="area-next"></div>
+  <div id="area-bonus"></div>
+</div>
+
+<div id="s-result" class="screen">
+  <div class="rhero">
+    <div class="rname" id="r-name"></div>
+    <div class="rscore" id="r-score">0</div>
+    <div class="rmax">점 / <span id="r-max">100</span>점</div>
+  </div>
+  <div class="mets">
+    <div class="mc"><div class="mcv" id="r-time">--</div><div class="mcl">소요 시간</div></div>
+    <div class="mc"><div class="mcv" id="r-hints">0회</div><div class="mcl">힌트 사용</div></div>
+    <div class="mc"><div class="mcv" id="r-correct">0/3</div><div class="mcl">정답 수</div></div>
+  </div>
+  <div class="bkd" id="r-bkd"></div>
+  <div class="rbtns">
+    <button class="rbtn rs" onclick="shareResult()">📋 결과 복사</button>
+    <button class="rbtn rp" onclick="goLogin()">다시 도전하기</button>
+  </div>
+</div>
+
+<div id="s-dash" class="screen">
+  <div class="dhead"><h2>📊 교사용 대시보드</h2><button class="bk" onclick="goLogin()">← 돌아가기</button></div>
+  <div class="sstrip" id="d-stats"></div>
+  <div class="twrap">
+    <table class="dt">
+      <thead><tr><th>이름</th><th>학번</th><th>난이도</th><th>점수</th><th>시간</th><th>힌트</th><th>정답</th></tr></thead>
+      <tbody id="d-tbody"></tbody>
+    </table>
+    <div class="emp" id="d-empty" style="display:none">👥<br>아직 제출한 학생이 없습니다.</div>
+  </div>
+  <div class="dbtns">
+    <button class="db ds" onclick="clearDash()">🗑 기록 초기화</button>
+    <button class="db dp" onclick="exportCSV()">⬇ CSV 다운로드</button>
+  </div>
+</div>
+
+</div>
+<script>
+// =========================================================
+// 문제 데이터
+// 각 단계(steps)는 hint1(첫 번째 힌트), hint2(두 번째 힌트 = 객관식), h2choices/h2ans 포함
+// 1단계: mode='text', hint1=초성힌트, hint2=좀 더 구체적 힌트(+객관식)
+// 2단계: mode='choice' (기존 유지), hint1만 있음
+// 3단계: mode='text', hint1=방향 힌트(답 직접 X), hint2=구조 힌트(+객관식)
+// =========================================================
+var PROB = {
+easy:[
+  {id:'e1',diff:'easy',type:'연속하는 수',
+   text:'연속하는 두 자연수의 합이 37일 때, 두 자연수를 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 두 ㅈ연수 중 하나를 x로 놓아 보세요. ㅈ은 수 또는 ㅋ은 수 모두 가능합니다.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 적합한 것은? (둘 다 가능해요)',
+     h2choices:['두 수 중 작은 수','두 수 중 큰 수','두 수의 합','두 수의 차'],
+     h2ans:'두 수 중 작은 수',
+     ok:['작은수','작은자연수','첫번째수','두수중작은수','연속된수중작은수','작은것',
+         '큰수','큰자연수','두번째수','두수중큰수','연속된수중큰수','큰것',
+         '두자연수중하나','하나를x','자연수'], score:30},
+    {label:'관계 파악', q:'x를 두 자연수 중 작은 수로 놓았다면 나머지 수를, 큰 수로 놓았다면 나머지 수를 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — 연속하는 자연수는 1씩 차이가 납니다. x가 작은 수면 큰 수는 x+1, x가 큰 수면 작은 수는 x-1입니다.',
+     choices:['x+1 또는 x-1','x + 2','x × 2','x + 37'], ans:'x+1 또는 x-1', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — 두 수의 ㅎ이 37이라는 조건을 식으로 표현해 보세요. (좌변: 두 수의 합, 우변: 37)',
+     hint2:'💡 힌트2 — 다음 중 올바른 식은? (x가 작은 수일 때)',
+     h2choices:['x + (x+1) = 37','x + (x+2) = 37','x × (x+1) = 37','2x = 37'],
+     h2ans:'x + (x+1) = 37',
+     ok:['x+(x+1)=37','x+x+1=37','2x+1=37',
+         '(x-1)+x=37','x+(x-1)=37','x-1+x=37','2x-1=37'], score:50}
+   ],
+   fc:['x+(x+1)=37','x+(x+2)=37','2x=37','x+37=x+1']
+  },
+  {id:'e2',diff:'easy',type:'나이 문제',
+   text:'현재 지수의 나이는 11세이고, 어머니의 나이는 38세이다. 어머니의 나이가 지수의 나이의 3배가 되는 것은 몇 년 후인지 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 구하려는 것은 ㅁ 년 ㅎ인지입니다. 그것을 x로 놓아 보세요.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['x년 후','지수의 현재 나이','어머니의 현재 나이','두 나이의 차'],
+     h2ans:'x년 후',
+     ok:['x년후','몇년후','년후','년수','xnyfter'], score:30},
+    {label:'관계 파악', q:'x년 후 지수의 나이를 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — 현재 나이에 지난 시간을 더하면 미래 나이가 됩니다.',
+     choices:['11 + x','11 - x','11 × x','38 + x'], ans:'11 + x', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — x년 후 어머니 나이와 지수 나이를 각각 x로 나타낸 뒤, "3배" 관계를 등호로 연결하세요.',
+     hint2:'💡 힌트2 — 다음 중 "어머니 나이 = 지수 나이 × 3"을 올바르게 나타낸 식은?',
+     h2choices:['38+x = 3(11+x)','38+x = 3×11','38 = 3(11+x)','38-x = 3(11-x)'],
+     h2ans:'38+x = 3(11+x)',
+     ok:['38+x=3(11+x)','3(11+x)=38+x','38+x=33+3x','3x+33=38+x',
+         '(38+x)=3(11+x)','3*(11+x)=38+x','38+x=3*(11+x)',
+         '(11+x)*3=38+x','(11+x)×3=38+x'], score:50}
+   ],
+   fc:['38+x=3(11+x)','38-x=3(11-x)','38+x=3×11','38=3(11+x)']
+  },
+  {id:'e3',diff:'easy',type:'분배 문제',
+   text:'민준이가 친구들에게 색연필을 나누어 주려고 한다. 4자루씩 나누어 주면 3자루가 남고, 5자루씩 나누어 주면 2자루가 부족하다. 민준이의 친구는 몇 명인지 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 구하려는 것은 ㅊ구의 ㅅ입니다. 그것을 x로 놓아 보세요.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['친구의 수','색연필의 수','나누어 주는 자루 수','남는 색연필 수'],
+     h2ans:'친구의 수',
+     ok:['친구수','친구의수','명수','친구명수','친구들의수'], score:30},
+    {label:'관계 파악', q:'4자루씩 나누고 3자루가 남았을 때 색연필 총 개수를 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — (한 명당 자루 수) × (친구 수) + (남는 수) = 총 색연필 수',
+     choices:['4x + 3','4x - 3','4x + 7','5x - 2'], ans:'4x + 3', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — "4자루씩 줄 때 총 개수"와 "5자루씩 줄 때 총 개수"는 같습니다. 두 식을 등호로 연결하세요.',
+     hint2:'💡 힌트2 — 다음 중 올바른 방정식은?',
+     h2choices:['4x+3 = 5x-2','4x-3 = 5x+2','4x+3 = 5x+2','4x-3 = 5x-2'],
+     h2ans:'4x+3 = 5x-2',
+     ok:['4x+3=5x-2','5x-2=4x+3'], score:50}
+   ],
+   fc:['4x+3=5x-2','4x-3=5x+2','4x+3=5x+2','4x-3=5x-2']
+  },
+  {id:'e4',diff:'easy',type:'탄소 배출',
+   text:'소율이가 동영상을 20분 동안 시청하고 이메일을 몇 통 전송한 결과 탄소 배출량이 총 17 g이었다. 동영상 10분 시청 시 1 g, 이메일 한 통 전송 시 3 g의 탄소가 발생한다. 전송한 이메일은 몇 통인지 구하시오.',
+   tbl:[['기기 사용 활동','탄소 배출량'],['동영상 10분 시청','1 g'],['이메일 한 통 전송','3 g']],
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 구하려는 것은 ㅇㅁㅇㄹ ㅌ 수입니다. 그것을 바로 x로 놓으면 됩니다.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['전송한 이메일 통 수','동영상 시청 시간','탄소 배출량','기기 종류'],
+     h2ans:'전송한 이메일 통 수',
+     ok:['이메일통수','이메일수','통수','이메일','x통','전송한이메일통수'], score:30},
+    {label:'관계 파악', q:'이메일을 x통 전송했을 때 이메일로 인한 탄소 배출량을 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — 이메일 한 통당 3 g이 발생합니다. x통이면?',
+     choices:['3x g','x + 3 g','x / 3 g','x g'], ans:'3x g', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — (동영상 배출량) + (이메일 배출량) = 총 배출량 관계를 식으로 세워 보세요. 동영상 20분의 배출량은 얼마인지 먼저 계산하세요.',
+     hint2:'💡 힌트2 — 다음 중 올바른 방정식은?',
+     h2choices:['2 + 3x = 17','1 + 3x = 17','3 + 2x = 17','2 + 3x = 20'],
+     h2ans:'2 + 3x = 17',
+     ok:['2+3x=17','3x+2=17','3x=15'], score:50}
+   ],
+   fc:['2+3x=17','1+3x=17','2+3x=20','3+2x=17']
+  }
+],
+mid:[
+  {id:'m1',diff:'mid',type:'왕복 거리·속력',
+   text:'태민이는 자전거를 타고 집에서 도서관까지 갈 때는 시속 12 km로 가고, 같은 길로 올 때는 시속 8 km로 와서 총 1시간 40분이 걸렸다. 집에서 도서관까지의 거리를 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 구하려는 것은 ㅊ~ㄷ서관까지의 ㄱ리입니다. 그것을 x km로 놓으면 (갈 때 시간)+(올 때 시간)으로 식을 세울 수 있습니다.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['집에서 도서관까지의 거리','갈 때 걸린 시간','올 때 걸린 시간','총 걸린 시간'],
+     h2ans:'집에서 도서관까지의 거리',
+     ok:['거리','편도거리','도서관까지거리','집에서도서관까지의거리','도서관까지의거리','xkm'], score:30},
+    {label:'관계 파악', q:'시속 12 km로 x km를 갔을 때 걸린 시간을 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — 시간 = 거리 ÷ 속력 공식을 사용하세요.',
+     choices:['x/12 시간','12/x 시간','12x 시간','x-12 시간'], ans:'x/12 시간', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — 왕복 1시간 40분이 걸렸으므로 (갈 때 시간) + (올 때 시간) = 1시간 40분입니다. 1시간 40분을 분수로 바꾸면?',
+     hint2:'💡 힌트2 — 1시간 40분 = 5/3시간일 때, 다음 중 올바른 방정식은?',
+     h2choices:['x/12 + x/8 = 5/3','x/12 + x/8 = 100','x/12 - x/8 = 5/3','12x + 8x = 5/3'],
+     h2ans:'x/12 + x/8 = 5/3',
+     ok:['x/12+x/8=5/3','x/8+x/12=5/3'], score:50}
+   ],
+   fc:['x/12+x/8=5/3','x/12+x/8=100','12x+8x=5/3','x/12-x/8=5/3']
+  },
+  {id:'m2',diff:'mid',type:'등산 왕복',
+   text:'서윤이가 등산할 때 올라갈 때는 시속 3 km로 걷고, 내려올 때는 올라갈 때보다 2 km 더 먼 길을 택하여 시속 4 km로 걸어서 총 3시간이 걸렸다. 올라간 거리를 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 구하려는 것은 ㅇ라간 ㄱ리입니다. 그것을 x km로 놓으면 내려오는 거리를 (x+2) km로 나타낼 수 있습니다.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['올라간 거리','내려온 거리','총 걸린 시간','올라가는 속력'],
+     h2ans:'올라간 거리',
+     ok:['올라간거리','올라가는거리','오르막거리','올라간길','올라간길의거리'], score:30},
+    {label:'관계 파악', q:'올라간 거리가 x km일 때 내려오는 거리를 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — 내려올 때는 올라갈 때보다 2 km 더 먼 길을 갑니다.',
+     choices:['x + 2 km','x - 2 km','2x km','x/2 km'], ans:'x + 2 km', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — 총 3시간이 걸렸으므로 (올라가는 시간) + (내려오는 시간) = 3입니다. 시간 = 거리 ÷ 속력 공식으로 각각 나타내 보세요.',
+     hint2:'💡 힌트2 — 올라가는 시간은 x/3, 내려오는 시간은 (x+2)/4일 때 올바른 방정식은?',
+     h2choices:['x/3 + (x+2)/4 = 3','x/3 + x/4 = 3','x/4 + (x+2)/3 = 3','x/3 - (x+2)/4 = 3'],
+     h2ans:'x/3 + (x+2)/4 = 3',
+     ok:['x/3+(x+2)/4=3','(x+2)/4+x/3=3'], score:50}
+   ],
+   fc:['x/3+(x+2)/4=3','x/3+x/4=3','x/4+(x+2)/3=3','x/3+(x-2)/4=3']
+  },
+  {id:'m3',diff:'mid',type:'왕복 기차',
+   text:'기차가 A 도시에서 B 도시까지 시속 90 km로 달리고, 돌아올 때는 시속 60 km로 달려서 왕복에 총 5시간이 걸렸다. A 도시에서 B 도시까지의 거리를 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 구하려는 것은 두 ㄷ시 사이의 ㄱ리입니다. A→B 거리를 x km로 놓으면 각 구간의 시간을 x로 나타낼 수 있습니다.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['A에서 B까지의 거리','A에서 B까지 걸린 시간','B에서 A까지 걸린 시간','왕복 총 시간'],
+     h2ans:'A에서 B까지의 거리',
+     ok:['거리','두도시사이의거리','a에서b까지의거리','xkm','ab거리'], score:30},
+    {label:'관계 파악', q:'시속 90 km로 x km를 달렸을 때 걸린 시간을 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — 시간 = 거리 ÷ 속력 공식을 사용하세요.',
+     choices:['x/90 시간','90/x 시간','90x 시간','x-90 시간'], ans:'x/90 시간', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — 왕복 5시간이 걸렸으므로 (갈 때 시간) + (올 때 시간) = 5입니다. 시간 = 거리/속력으로 각각 나타내 보세요.',
+     hint2:'💡 힌트2 — 갈 때 시간은 x/90, 올 때 시간은 x/60일 때 올바른 방정식은?',
+     h2choices:['x/90 + x/60 = 5','x/90 - x/60 = 5','x/90 + x/60 = 2.5','90x + 60x = 5'],
+     h2ans:'x/90 + x/60 = 5',
+     ok:['x/90+x/60=5','x/60+x/90=5'], score:50}
+   ],
+   fc:['x/90+x/60=5','x/90+x/60=2.5','90x+60x=5','x/90-x/60=5']
+  }
+],
+hard:[
+  {id:'h1',diff:'hard',type:'추격 문제',
+   text:'동생이 집에서 출발한 지 8분 후에 형이 같은 길을 따라 동생을 만나러 갔다. 동생은 분속 50 m, 형은 분속 80 m로 걸을 때, 형이 출발한 지 몇 분 후에 동생을 만나는지 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 구하려는 것은 ㅎ이 출발한 후 ㄷ생을 만날 때까지 ㄱ린 시간입니다. 그것을 x분으로 놓으면 동생이 걸은 시간은 (x+8)분이 됩니다.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['형이 출발 후 걸린 시간','동생이 출발 후 걸린 시간','형이 이동한 거리','두 사람의 속력 차'],
+     h2ans:'형이 출발 후 걸린 시간',
+     ok:['형이걸은시간','형의이동시간','형이출발후걸린시간','형의시간','형이걷는시간'], score:30},
+    {label:'관계 파악', q:'형이 x분 동안 걸었을 때 동생이 걸은 시간을 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — 동생은 형보다 8분 먼저 출발했습니다. 형이 x분 걸었을 때 동생은 얼마나 걸었을까요?',
+     choices:['x + 8 분','x - 8 분','8x 분','x/8 분'], ans:'x + 8 분', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — 형과 동생이 만나는 순간, 두 사람이 이동한 거리는 같습니다. 거리 = 속력 × 시간으로 각각 나타내 보세요.',
+     hint2:'💡 힌트2 — 형의 이동 거리는 80x, 동생의 이동 거리는 50(x+8)일 때 올바른 방정식은?',
+     h2choices:['80x = 50(x+8)','80x = 50(x-8)','50x = 80(x+8)','80x + 50x = 8'],
+     h2ans:'80x = 50(x+8)',
+     ok:['80x=50(x+8)','50(x+8)=80x','80x=50x+400'], score:50}
+   ],
+   fc:['80x=50(x+8)','80x=50(x-8)','50x=80(x+8)','80(x+8)=50x']
+  },
+  {id:'h2',diff:'hard',type:'비율·증감',
+   text:'작년 전체 학생이 800명인 학교에서 올해 남학생은 4% 늘고 여학생은 6% 줄었더니 전체 학생 수가 작년과 같았다. 올해 남학생은 몇 명인지 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 전체에서 ㄴ학생과 ㅇ학생으로 나눌 수 있습니다. ㅈ년 남학생 수를 x로 놓으면, 여학생은 (800-x)로 나타낼 수 있습니다.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['작년 남학생 수','올해 남학생 수','작년 여학생 수','올해 전체 학생 수'],
+     h2ans:'작년 남학생 수',
+     ok:['작년남학생수','남학생수','남학생','작년남학생'], score:30},
+    {label:'관계 파악', q:'작년 남학생이 x명일 때 작년 여학생 수를 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — 전체 학생 수에서 남학생 수를 빼면 여학생 수가 됩니다.',
+     choices:['800 - x 명','800 + x 명','x - 800 명','800 × x 명'], ans:'800 - x 명', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — 올해 전체 학생 수는 작년과 같은 800명입니다. (올해 남학생) + (올해 여학생) = 800 관계를 세워 보세요. 4% 증가는 ×1.04, 6% 감소는 ×0.94입니다.',
+     hint2:'💡 힌트2 — 다음 중 올바른 방정식은?',
+     h2choices:['1.04x + 0.94(800-x) = 800','1.04x + 0.96(800-x) = 800','1.04x - 0.94(800-x) = 800','0.04x + 0.06(800-x) = 800'],
+     h2ans:'1.04x + 0.94(800-x) = 800',
+     ok:['1.04x+0.94(800-x)=800','0.94(800-x)+1.04x=800'], score:50}
+   ],
+   fc:['1.04x+0.94(800-x)=800','1.04x+0.96(800-x)=800','1.04x-0.94(800-x)=800','0.04x=0.06(800-x)']
+  },
+  {id:'h3',diff:'hard',type:'반대 방향 추격',
+   text:'둘레가 2400 m인 트랙에서 지훈이와 나연이가 같은 지점에서 동시에 반대 방향으로 달리기 시작했다. 지훈이는 분속 80 m, 나연이는 분속 100 m로 달릴 때, 처음으로 만나는 것은 출발한 지 몇 분 후인지 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 구하려는 것은 처음 ㅁ나는 ㅅ간입니다. 출발 후 x분 후에 만난다고 놓으면 각자의 이동 거리를 x로 나타낼 수 있습니다.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['출발 후 처음 만나는 시간(분)','지훈이가 이동한 거리','나연이가 이동한 거리','두 사람의 속력 합'],
+     h2ans:'출발 후 처음 만나는 시간(분)',
+     ok:['걸린시간','x분','처음만나는시간','분','시간','출발후처음만나는시간'], score:30},
+    {label:'관계 파악', q:'반대 방향으로 달릴 때 처음 만나는 조건은?', mode:'choice',
+     hint1:'💡 힌트 — 반대 방향으로 달리면 두 사람이 이동한 거리를 합쳤을 때 트랙 한 바퀴가 되면 만납니다.',
+     choices:['두 이동 거리의 합 = 2400 m','두 이동 거리의 차 = 2400 m','두 이동 거리가 같을 때','지훈의 거리만 = 2400 m'], ans:'두 이동 거리의 합 = 2400 m', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — 두 사람이 이동한 거리의 합이 2400 m일 때 처음 만납니다. 거리 = 속력 × 시간으로 각각 나타내 보세요.',
+     hint2:'💡 힌트2 — 지훈(분속 80)과 나연(분속 100)이 x분 달렸을 때 올바른 방정식은?',
+     h2choices:['80x + 100x = 2400','80x - 100x = 2400','80x + 100x = 1200','(80+100) = 2400x'],
+     h2ans:'80x + 100x = 2400',
+     ok:['80x+100x=2400','100x+80x=2400','180x=2400'], score:50}
+   ],
+   fc:['80x+100x=2400','80x+100x=1200','80x-100x=2400','180x=1200']
+  },
+  {id:'h4',diff:'hard',type:'시간 차이',
+   text:'집에서 학교까지 분속 60 m로 걸으면 예정 시간보다 5분 늦고, 분속 80 m로 걸으면 예정 시간보다 3분 빠르다. 예정 시간은 몇 분인지 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 구하려는 것은 ㅇ정 ㅅ간(분)입니다. 그것을 x로 놓으면 두 경우 모두 같은 거리를 이동하므로 거리에 관한 식을 세울 수 있습니다.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['예정 시간(분)','실제 걸린 시간','집에서 학교까지 거리','두 속력의 차'],
+     h2ans:'예정 시간(분)',
+     ok:['예정시간','x분','시간','분','예정시간분'], score:30},
+    {label:'관계 파악', q:'분속 60 m로 걸었을 때 실제 걸린 시간을 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — 예정 시간보다 5분 늦었다는 것은, 실제로는 5분이 더 걸렸다는 뜻입니다.',
+     choices:['x + 5 분','x - 5 분','x + 3 분','x - 3 분'], ans:'x + 5 분', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — 어느 속도로 가든 집에서 학교까지의 거리는 같습니다. 거리 = 속력 × 시간으로 두 경우의 거리를 각각 나타내고 등호로 연결하세요.',
+     hint2:'💡 힌트2 — 60 m/분으로 (x+5)분, 80 m/분으로 (x-3)분 걸렸을 때 올바른 방정식은?',
+     h2choices:['60(x+5) = 80(x-3)','60(x-5) = 80(x+3)','60(x+5) = 80(x+3)','80(x+5) = 60(x-3)'],
+     h2ans:'60(x+5) = 80(x-3)',
+     ok:['60(x+5)=80(x-3)','80(x-3)=60(x+5)','60x+300=80x-240'], score:50}
+   ],
+   fc:['60(x+5)=80(x-3)','60(x-5)=80(x+3)','60(x+5)=80(x+3)','80(x+5)=60(x-3)']
+  },
+  {id:'h5',diff:'hard',type:'농도 문제',
+   text:'소금물 600 g에 소금이 12% 들어 있다. 여기에 소금을 더 넣어서 20%의 소금물을 만들려고 한다. 소금을 몇 g 더 넣어야 하는지 구하시오.',
+   steps:[
+    {label:'미지수 x 설정', q:'무엇을 미지수 x로 둘 것인가?', mode:'text',
+     hint1:'💡 힌트1 — 구하려는 것은 ㄷ 넣는 ㅅ금의 양(g)입니다. 그것을 x g으로 놓으면 됩니다.',
+     hint2:'💡 힌트2 — 다음 중 x로 놓기 가장 적합한 것은?',
+     h2choices:['더 넣는 소금의 양','처음 소금물의 양','소금물의 농도','소금물의 총 무게'],
+     h2ans:'더 넣는 소금의 양',
+     ok:['더넣는소금의양','소금의양','추가할소금','소금','xg'], score:30},
+    {label:'관계 파악', q:'소금을 x g 더 넣은 후 소금물의 총 무게를 x로 나타내면?', mode:'choice',
+     hint1:'💡 힌트 — 처음 소금물 무게에 추가한 소금 무게를 더합니다.',
+     choices:['600 + x g','600 - x g','600 × x g','600 / x g'], ans:'600 + x g', score:20},
+    {label:'방정식 세우기', q:'x에 대한 방정식을 세우시오.', mode:'text',
+     hint1:'💡 힌트1 — (소금의 양) ÷ (소금물의 양) = 농도입니다. 소금을 x g 더 넣기 전과 후의 소금 양을 각각 구해 보세요. 처음 소금의 양: 600 × 0.12 = ?',
+     hint2:'💡 힌트2 — (처음 소금 양 + x) = (새 소금물 전체) × 0.2 관계로 나타내면?',
+     h2choices:['600×0.12 + x = (600+x)×0.2','600×0.12 = (600+x)×0.2','600×0.12 + x = 600×0.2','72 = (600+x)×0.2'],
+     h2ans:'600×0.12 + x = (600+x)×0.2',
+     ok:['600×0.12+x=(600+x)×0.2','72+x=0.2(600+x)','0.12×600+x=0.2×(600+x)'], score:50}
+   ],
+   fc:['600×0.12+x=(600+x)×0.2','600×0.12=(600+x)×0.2','600×0.12+x=600×0.2','72+x=120']
+  }
+]
+};
+
+// =========================================================
+// 상태
+// G.hcnt[si] = 해당 단계에서 사용한 힌트 횟수 (0,1,2)
+// G.hch      = 힌트2 객관식에서 선택한 값
+// =========================================================
+var G={
+  name:'',sid:'',diff:'',
+  probs:[],idx:0,
+  si:0,sres:[],hcnt:[],wc:0,
+  tscore:0,mscore:0,cc:0,
+  hints:0,slog:[],
+  t0:0,tleft:180,tint:null,
+  isB:false,bprobs:[],
+  choice:null, hch:null
+};
+var selDiff=null;
+
+function pickDiff(d){
+  ['easy','mid','hard'].forEach(function(x){document.getElementById('dc-'+x).className='dc';});
+  document.getElementById('dc-'+d).className='dc sel-'+d;
+  selDiff=d;
+}
+function shufl(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+
+function startQuiz(){
+  var n=document.getElementById('inp-name').value.trim();
+  var s=document.getElementById('inp-sid').value.trim();
+  if(!n||!s){alert('이름과 학번을 입력해주세요.');return;}
+  if(!selDiff){alert('난이도를 선택해주세요.');return;}
+  G.name=n;G.sid=s;G.diff=selDiff;
+  G.probs=shufl(PROB[selDiff]).slice(0,3);
+  G.idx=0;G.si=0;G.sres=[];G.hcnt=[];G.wc=0;
+  G.tscore=0;G.mscore=0;G.cc=0;
+  G.hints=0;G.slog=[];
+  G.isB=false;G.bprobs=[];G.choice=null;G.hch=null;
+  G.t0=Date.now();
+  showScreen('s-quiz');
+  startTimer();
+  renderProb();
+}
+
+function startTimer(){
+  G.tleft=180;showTimer();
+  if(G.tint)clearInterval(G.tint);
+  G.tint=setInterval(function(){G.tleft--;showTimer();if(G.tleft<=0){clearInterval(G.tint);finishSession();}},1000);
+}
+function showTimer(){
+  var m=Math.floor(G.tleft/60),s=G.tleft%60;
+  document.getElementById('timerval').textContent=m+':'+(s<10?'0':'')+s;
+  document.getElementById('timerbox').className='timer'+(G.tleft<=30?' warn':'');
+}
+
+function renderProb(){
+  var ps=G.isB?G.bprobs:G.probs;
+  var p=ps[G.idx];
+  var tot=ps.length;
+  document.getElementById('qlbl').textContent=(G.isB?'보너스 ':'문제 ')+(G.idx+1)+'/'+tot;
+  document.getElementById('progfill').style.width=((G.idx/tot)*100)+'%';
+
+  var dc=p.diff==='easy'?'pe':p.diff==='mid'?'pm':'ph';
+  var dl=p.diff==='easy'?'하':p.diff==='mid'?'중':'상';
+  var tc=p.diff==='easy'?'tge':p.diff==='mid'?'tgm':'tgh';
+  var tbl='';
+  if(p.tbl){tbl='<table class="ptbl">';for(var r=0;r<p.tbl.length;r++){tbl+='<tr>';for(var c=0;c<p.tbl[r].length;c++){tbl+=(r===0?'<th>':'<td>')+p.tbl[r][c]+(r===0?'</th>':'</td>');}tbl+='</tr>';}tbl+='</table>';}
+  setHTML('area-prob','<div class="pcrd '+dc+'"><div class="ptag '+tc+'">'+dl+' · '+p.type+'</div><div class="ptxt">'+p.text+'</div>'+tbl+'</div>');
+
+  G.si=0;G.sres=[];G.hcnt=[];G.wc=0;G.choice=null;G.hch=null;
+  for(var i=0;i<p.steps.length;i++){G.sres.push(null);G.hcnt.push(0);}
+
+  renderPills(p);
+  renderStep(p,0);
+  setHTML('area-fb','<div class="fb" id="fbbox"></div>');
+  setHTML('area-next','');
+  setHTML('area-bonus','');
+}
+
+function renderPills(p){
+  var h='<div class="spills">';
+  for(var i=0;i<p.steps.length;i++){
+    var cls='sp'+(i<G.si?' done':i===G.si?' active':'');
+    h+='<div class="'+cls+'" id="sp'+i+'"><span class="sn">'+(i+1)+'단계</span><span class="sl">'+p.steps[i].label+'</span></div>';
+  }
+  h+='</div>';
+  setHTML('area-pills',h);
+}
+function updPills(p){
+  for(var i=0;i<p.steps.length;i++){
+    var el=document.getElementById('sp'+i);
+    if(el)el.className='sp'+(i<G.si?' done':i===G.si?' active':'');
+  }
+}
+
+// ── renderStep: 힌트 영역을 step card 안에 포함 ──
+function renderStep(p,si){
+  var s=p.steps[si];
+  var bc=['b1','b2','b3'][si];
+  var useFC=(p.diff==='easy'&&G.wc>=2&&si===2);
+  var isChoice=(s.mode==='choice'||useFC);
+
+  // 입력 영역
+  var inp='';
+  if(isChoice){
+    var opts=useFC?p.fc:s.choices;
+    inp='<div class="chs" id="chswrap">';
+    for(var i=0;i<opts.length;i++){
+      var v=opts[i].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      inp+='<button type="button" class="ch" data-v="'+v+'" onclick="pickCh(this)">'+opts[i]+'</button>';
+    }
+    inp+='</div>';
+  } else {
+    inp='<div class="tinp"><input type="text" id="textinp" placeholder="답을 입력하세요" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>';
+  }
+
+  // 힌트 버튼: 텍스트 입력 단계에만 표시, 2단계(choice)는 hint1만 버튼 표시
+  var hintBtnHtml='';
+  if(!useFC){
+    if(s.mode==='choice'){
+      hintBtnHtml='<button type="button" class="bhint" id="hbtn" onclick="doHint()">💡 힌트</button>';
+    } else {
+      hintBtnHtml='<button type="button" class="bhint" id="hbtn" onclick="doHint()">💡 힌트 (-10점)</button>';
+    }
+  }
+
+  // 힌트 표시 영역 (step card 내부)
+  var hintAreaHtml='<div class="hint-area" id="hint-area-inner"></div>';
+
+  var html='<div class="scrd">'+
+    '<div class="shead"><div class="sqtxt">'+(si+1)+'단계. '+s.q+'</div><span class="sbdg '+bc+'">'+s.score+'점</span></div>'+
+    inp+
+    '<div class="brow">'+
+    '<button type="button" class="bsub" id="subbtn" onclick="doSubmit()">✓ 제출</button>'+
+    hintBtnHtml+
+    '</div>'+
+    hintAreaHtml+
+    '</div>';
+
+  setHTML('area-step',html);
+  setHTML('area-fb','<div class="fb" id="fbbox"></div>');
+  setHTML('area-next','');
+  G.choice=null;G.hch=null;
+}
+
+function pickCh(el){
+  var all=document.querySelectorAll('#chswrap .ch');
+  for(var i=0;i<all.length;i++)all[i].classList.remove('sel');
+  el.classList.add('sel');
+  G.choice=el.getAttribute('data-v');
+}
+
+function pickHCh(el){
+  var all=document.querySelectorAll('#hchswrap .hch');
+  for(var i=0;i<all.length;i++)all[i].classList.remove('hsel');
+  el.classList.add('hsel');
+  G.hch=el.getAttribute('data-v');
+}
+
+// ── 핵심 수정: doHint ──
+// hint-area-inner 는 step card 안에 있으므로 항상 DOM에 존재
+function doHint(){
+  var ps=G.isB?G.bprobs:G.probs;
+  var p=ps[G.idx];
+  var s=p.steps[G.si];
+  var area=document.getElementById('hint-area-inner');
+  if(!area)return;
+
+  var currentHintCount=G.hcnt[G.si];
+
+  if(currentHintCount===0){
+    // 힌트1 표시
+    G.hcnt[G.si]=1;
+    if(s.mode!=='choice') G.hints++;
+    var penaltyNote=(s.mode!=='choice')?'<strong>힌트 1</strong>':' <strong>힌트</strong>';
+    area.innerHTML='<div class="hint-item">'+penaltyNote+' '+s.hint1+'</div>';
+
+    // 힌트2가 있으면 버튼을 "힌트2 보기"로 바꿔줌 (텍스트 단계만)
+    if(s.hint2&&s.mode!=='choice'){
+      var hbtn=document.getElementById('hbtn');
+      if(hbtn){hbtn.textContent='💡 힌트2 (추가 -5점)';hbtn.disabled=false;}
+    } else {
+      var hbtn2=document.getElementById('hbtn');
+      if(hbtn2)hbtn2.disabled=true;
+    }
+  } else if(currentHintCount===1&&s.hint2&&s.mode!=='choice'){
+    // 힌트2 표시 (객관식 형태)
+    G.hcnt[G.si]=2;
+    G.hints++;
+    var prev=area.innerHTML;
+    var h2html='<div class="hint-item"><strong>힌트 2</strong> '+s.hint2;
+    if(s.h2choices&&s.h2ans){
+      h2html+='<div class="hint-chs" id="hchswrap">';
+      for(var i=0;i<s.h2choices.length;i++){
+        var hv=s.h2choices[i].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        h2html+='<button type="button" class="hch" data-v="'+hv+'" onclick="pickHCh(this)">'+s.h2choices[i]+'</button>';
+      }
+      h2html+='</div>';
+    }
+    h2html+='</div>';
+    area.innerHTML=prev+h2html;
+    var hbtn3=document.getElementById('hbtn');
+    if(hbtn3)hbtn3.disabled=true;
+  }
+}
+
+function norm(str){
+  return (str||'')
+    .toLowerCase()
+    .trim()
+    // 전각 문자 → 반각
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);})
+    // 공백 전부 제거
+    .replace(/\s+/g,'')
+    // 곱셈·나눗셈 기호 통일
+    .replace(/[×✕]/g,'*').replace(/[÷]/g,'/')
+    // 괄호 통일
+    .replace(/[（｛\[]/g,'(').replace(/[）｝\]]/g,')')
+    // 등호 통일
+    .replace(/[=＝]/g,'=')
+    // x 계열 통일
+    .replace(/[ｘＸ]/g,'x')
+    // 불필요한 바깥 괄호 제거: (A)=B → A=B
+    .replace(/^\(([^()]+)\)=(.+)$/,'$1=$2')
+    .replace(/^(.+)=\(([^()]+)\)$/,'$1=$2');
+}
+
+// 방정식 좌변·우변 교환도 정답 처리
+function flipEq(s){
+  var idx=s.indexOf('=');
+  if(idx<0)return s;
+  return s.slice(idx+1)+'='+s.slice(0,idx);
+}
+
+// 의미 유사 체크 (정규화 + 좌우변 교환 + 포함 관계)
+function chkText(ans,list){
+  var na=norm(ans);
+  if(!na||na.length<1)return false;
+  var naFlip=flipEq(na);
+  for(var i=0;i<list.length;i++){
+    var nc=norm(list[i]);
+    var ncFlip=flipEq(nc);
+    // 완전 일치
+    if(na===nc||na===ncFlip)return true;
+    // 좌우변 뒤집어도 일치
+    if(naFlip===nc||naFlip===ncFlip)return true;
+    // 포함 관계 (짧은 키워드 답 허용: 1단계 '거리', '년후' 등)
+    if(na.length>=2&&nc.length>=2){
+      if(na.indexOf(nc)>=0||nc.indexOf(na)>=0)return true;
+    }
+  }
+  return false;
+}
+
+function doSubmit(){
+  var ps=G.isB?G.bprobs:G.probs;
+  var p=ps[G.idx];
+  var s=p.steps[G.si];
+  var useFC=(p.diff==='easy'&&G.wc>=2&&G.si===2);
+  var isChoice=(s.mode==='choice'||useFC);
+
+  var ans='';
+  if(isChoice){
+    ans=G.choice||'';
+  } else {
+    var ti=document.getElementById('textinp');
+    ans=ti?ti.value.trim():'';
+    // 힌트2 객관식을 골랐고 텍스트 입력이 비어 있으면 힌트2 선택값을 답으로 사용
+    if(!ans&&G.hch){ans=G.hch;}
+  }
+  if(!ans){alert('답을 입력하거나 선택해주세요.');return;}
+
+  var sb=document.getElementById('subbtn');
+  if(sb)sb.disabled=true;
+  var hbtn=document.getElementById('hbtn');
+  if(hbtn)hbtn.disabled=true;
+
+  var allCh=document.querySelectorAll('#chswrap .ch');
+  for(var i=0;i<allCh.length;i++)allCh[i].onclick=null;
+
+  var ok=false;
+  if(isChoice){
+    ok=(norm(ans)===norm(s.ans||''));
+  } else {
+    ok=chkText(ans,s.ok||[]);
+  }
+
+  var fb=document.getElementById('fbbox');
+  if(fb)fb.style.display='block';
+
+  if(ok){
+    var sc=s.score;
+    // 힌트 감점: hint1 = -10, hint2 = 추가 -5
+    var hused=G.hcnt[G.si];
+    if(hused>=1&&s.mode!=='choice')sc=Math.max(0,sc-10);
+    if(hused>=2&&s.mode!=='choice')sc=Math.max(0,sc-5);
+    G.sres[G.si]={ok:true,score:sc};
+
+    if(fb){fb.className='fb ok';fb.textContent='✅ 정답입니다! +'+sc+'점';}
+
+    // 힌트2 객관식 정답 표시
+    var hchAll=document.querySelectorAll('#hchswrap .hch');
+    for(var j=0;j<hchAll.length;j++){
+      if(norm(hchAll[j].getAttribute('data-v'))===norm(s.h2ans||''))hchAll[j].classList.add('hcorrect');
+    }
+    if(isChoice){
+      for(var k=0;k<allCh.length;k++){
+        if(norm(allCh[k].getAttribute('data-v'))===norm(s.ans||''))allCh[k].classList.add('correct');
+      }
+    }
+
+    if(G.si<p.steps.length-1){setTimeout(function(){advStep(p);},1000);}
+    else{endProb(p);}
+
+  } else {
+    G.wc++;
+    G.sres[G.si]={ok:false,score:0};
+
+    if(isChoice){
+      for(var m=0;m<allCh.length;m++){
+        if(norm(allCh[m].getAttribute('data-v'))===norm(s.ans||''))allCh[m].classList.add('correct');
+        else if(allCh[m].classList.contains('sel'))allCh[m].classList.add('wrong');
+      }
+      if(fb){fb.className='fb no';fb.textContent='❌ 다시 생각해보세요. 정답이 표시되었습니다.';}
+      if(G.si<p.steps.length-1){setTimeout(function(){advStep(p);},1700);}
+      else{setTimeout(function(){endProb(p);},1700);}
+    } else {
+      if(fb){
+        fb.className='fb no';
+        fb.textContent='❌ 다시 생각해보세요.';
+      }
+      if(sb)sb.disabled=false;
+      if(hbtn&&G.hcnt[G.si]<2)hbtn.disabled=false;
+    }
+  }
+}
+
+function advStep(p){
+  G.si++;G.choice=null;G.hch=null;
+  updPills(p);
+  renderStep(p,G.si);
+  setHTML('area-fb','<div class="fb" id="fbbox"></div>');
+  setHTML('area-next','');
+}
+
+function endProb(p){
+  var total=0;
+  for(var i=0;i<G.sres.length;i++){if(G.sres[i]&&G.sres[i].ok)total+=G.sres[i].score;}
+  var allOk=G.sres.every(function(r){return r&&r.ok;});
+  var tb=0,nhb=0;
+  if(allOk){
+    G.cc++;
+    tb=G.tleft>120?10:G.tleft>60?5:0;
+    nhb=G.hcnt.every(function(h){return h===0;})?10:0;
+    total+=tb+nhb;
+  }
+  G.tscore+=total;
+  G.mscore+=p.steps.reduce(function(a,s){return a+s.score;},0);
+  G.slog.push({p:p,sres:G.sres.slice(),score:total});
+
+  var fb=document.getElementById('fbbox');
+  if(fb&&allOk&&(tb||nhb)){
+    fb.style.display='block';fb.className='fb ok';
+    fb.textContent='✅ 모두 정답! 시간보너스 +'+tb+'점, 힌트미사용 +'+nhb+'점';
+  }
+  setHTML('area-next','<button type="button" class="bnext" style="display:block" onclick="nextProb()">다음 문제 →</button>');
+}
+
+function nextProb(){
+  var ps=G.isB?G.bprobs:G.probs;
+  if(G.idx<ps.length-1){G.idx++;G.choice=null;G.hch=null;renderProb();}
+  else{if(!G.isB){offerBonus();}else{finishSession();}}
+}
+
+function offerBonus(){
+  var used=G.probs.map(function(p){return p.id;});
+  var pool=PROB[G.diff].filter(function(p){return used.indexOf(p.id)<0;});
+  if(!pool.length||G.tleft<40){finishSession();return;}
+  var cnt=G.tleft>90?Math.min(2,pool.length):1;
+  ['area-prob','area-pills','area-step','area-fb','area-next'].forEach(function(id){setHTML(id,'');});
+  setHTML('area-bonus','<div class="ov show"><div class="modal"><h2>🏆 기본 문제 완료!</h2><p>시간이 남아 있습니다.<br>보너스 <strong>'+cnt+'문제</strong>에 도전해서 추가 점수를 받아보세요!</p><div class="mbtns"><button type="button" class="my" onclick="startBonus('+cnt+')">도전!</button><button type="button" class="mn" onclick="finishSession()">그냥 제출</button></div></div></div>');
+}
+function startBonus(cnt){
+  var used=G.probs.map(function(p){return p.id;});
+  var pool=shufl(PROB[G.diff].filter(function(p){return used.indexOf(p.id)<0;})).slice(0,cnt);
+  G.bprobs=pool;G.isB=true;G.idx=0;G.mscore+=cnt*100;
+  setHTML('area-bonus','');renderProb();
+}
+
+function finishSession(){
+  clearInterval(G.tint);
+  var el=Math.floor((Date.now()-G.t0)/1000);
+  var ts=Math.floor(el/60)+'분 '+(el%60)+'초';
+  var tot=G.probs.length+(G.isB?G.bprobs.length:0);
+  var dlmap={easy:'하',mid:'중',hard:'상'};
+  saveR({name:G.name,sid:G.sid,diff:G.diff,score:G.tscore,max:G.mscore,time:ts,hints:G.hints,correct:G.cc,total:tot});
+  showScreen('s-result');
+  document.getElementById('r-name').textContent=G.name+' ('+G.sid+') · '+dlmap[G.diff];
+  document.getElementById('r-score').textContent=G.tscore;
+  document.getElementById('r-max').textContent=G.mscore||100;
+  document.getElementById('r-time').textContent=ts;
+  document.getElementById('r-hints').textContent=G.hints+'회';
+  document.getElementById('r-correct').textContent=G.cc+'/'+tot;
+  var bh='';
+  G.slog.forEach(function(r,i){
+    var ok=r.sres.every(function(x){return x&&x.ok;});
+    bh+='<div class="brw"><span>문제'+(i+1)+': '+r.p.type+'</span><span class="'+(ok?'okc':'noc')+'">'+(ok?'✓':'✗')+' '+r.score+'점</span></div>';
+  });
+  setHTML('r-bkd',bh);
+}
+
+function saveR(d){try{var k='qr',arr=JSON.parse(localStorage.getItem(k)||'[]');d.ts=new Date().toLocaleString();arr.push(d);localStorage.setItem(k,JSON.stringify(arr));}catch(e){}}
+function shareResult(){
+  var dlmap={easy:'하',mid:'중',hard:'상'};
+  var t='[일차방정식 형성평가]\n이름: '+G.name+' ('+G.sid+')\n난이도: '+dlmap[G.diff]+'\n점수: '+G.tscore+'/'+(G.mscore||100)+'점\n힌트: '+G.hints+'회';
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){alert('복사되었습니다!');}).catch(function(){prompt('결과를 복사하세요:',t);});}
+  else{prompt('결과를 복사하세요:',t);}
+}
+function showDash(){showScreen('s-dash');loadDash();}
+function loadDash(){
+  try{
+    var data=JSON.parse(localStorage.getItem('qr')||'[]');
+    var tb=document.getElementById('d-tbody'),em=document.getElementById('d-empty');
+    if(!data.length){tb.innerHTML='';em.style.display='block';renderStat([]);return;}
+    em.style.display='none';renderStat(data);
+    var dlmap={easy:'하',mid:'중',hard:'상'},dcmap={easy:'be',mid:'bm',hard:'bh'};
+    tb.innerHTML=data.slice().reverse().map(function(r){
+      return '<tr><td>'+r.name+'</td><td>'+r.sid+'</td><td><span class="bdg '+(dcmap[r.diff]||'')+'">'+(dlmap[r.diff]||r.diff)+'</span></td><td>'+r.score+'/'+(r.max||100)+'</td><td>'+r.time+'</td><td>'+r.hints+'</td><td>'+r.correct+'/'+r.total+'</td></tr>';
+    }).join('');
+  }catch(e){document.getElementById('d-empty').style.display='block';}
+}
+function renderStat(data){
+  var avg=data.length?Math.round(data.reduce(function(a,r){return a+r.score;},0)/data.length):0;
+  var mx=data.length?Math.max.apply(null,data.map(function(r){return r.score;})):0;
+  var h=data.length?Math.round(data.reduce(function(a,r){return a+r.hints;},0)/data.length*10)/10:0;
+  setHTML('d-stats','<div class="mc"><div class="mcv">'+data.length+'</div><div class="mcl">참여 학생</div></div><div class="mc"><div class="mcv">'+avg+'</div><div class="mcl">평균 점수</div></div><div class="mc"><div class="mcv">'+mx+'</div><div class="mcl">최고 점수</div></div><div class="mc"><div class="mcv">'+h+'</div><div class="mcl">평균 힌트</div></div>');
+}
+function clearDash(){if(confirm('모든 기록을 삭제할까요?')){localStorage.removeItem('qr');loadDash();}}
+function exportCSV(){
+  try{
+    var data=JSON.parse(localStorage.getItem('qr')||'[]');
+    if(!data.length){alert('데이터가 없습니다.');return;}
+    var h='이름,학번,난이도,점수,최대점수,시간,힌트,정답수,총문제,시각\n';
+    var rows=data.map(function(r){return[r.name,r.sid,r.diff,r.score,r.max||100,r.time,r.hints,r.correct,r.total,r.ts].join(',');}).join('\n');
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob(['\uFEFF'+h+rows],{type:'text/csv;charset=utf-8;'}));
+    a.download='quiz_results.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);
+  }catch(e){alert('실패: '+e.message);}
+}
+function setHTML(id,html){var el=document.getElementById(id);if(el)el.innerHTML=html;}
+function showScreen(id){var all=document.querySelectorAll('.screen');for(var i=0;i<all.length;i++)all[i].classList.remove('active');var t=document.getElementById(id);if(t)t.classList.add('active');}
+function goLogin(){clearInterval(G.tint);showScreen('s-login');}
+</script>
+</body>
+</html>
