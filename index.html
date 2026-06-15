@@ -147,6 +147,16 @@ table.dt td{padding:9px 8px;border-bottom:1px solid #F3F4F6;color:#111;max-width
     <button class="btn-go" onclick="startQuiz()">시작하기 →</button>
     <button class="btn-link" onclick="showDash()">📊 교사용 대시보드</button>
   </div>
+  <div class="card" style="margin-top:0">
+    <div style="font-size:12px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">✏️ 수식 입력 방법</div>
+    <div style="display:grid;gap:7px;font-size:13px;color:#374151">
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="flex-shrink:0;width:20px;text-align:center">×</span><span><b>곱하기</b>: 문자·수 사이는 붙여 씁니다 <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">2x</code>, <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">3(x+1)</code><br>기호가 필요하면 <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">*</code> 사용 &nbsp;예) <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">3*5</code></span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="flex-shrink:0;width:20px;text-align:center">÷</span><span><b>나누기·분수</b>: <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">/</code> 사용 &nbsp;예) <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">x/12</code>, <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">x/3+x/4</code></span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="flex-shrink:0;width:20px;text-align:center">=</span><span><b>등호</b>: <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">=</code> 그대로 입력 &nbsp;예) <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">x+(x+1)=37</code></span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="flex-shrink:0;width:20px;text-align:center">( )</span><span><b>괄호</b>: <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">(</code> <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">)</code> 사용 &nbsp;예) <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">3(x+1)</code>, <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">80x=50(x+8)</code></span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="flex-shrink:0;width:20px;text-align:center">💬</span><span><b>1단계 답</b>은 말로 써도 됩니다 &nbsp;예) <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">거리</code>, <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">친구 수</code>, <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">x년 후</code></span></div>
+    </div>
+  </div>
 </div>
 
 <div id="s-quiz" class="screen">
@@ -643,18 +653,20 @@ function doHint(){
   if(currentHintCount===0){
     // 힌트1 표시
     G.hcnt[G.si]=1;
+    // choice 모드(2단계)는 감점 없음, text 모드만 감점
     if(s.mode!=='choice') G.hints++;
-    var penaltyNote=(s.mode!=='choice')?'<strong>힌트 1</strong>':' <strong>힌트</strong>';
+    var penaltyNote=(s.mode!=='choice')?'<strong>힌트 1</strong> (-10점)':'<strong>힌트</strong>';
     area.innerHTML='<div class="hint-item">'+penaltyNote+' '+s.hint1+'</div>';
 
-    // 힌트2가 있으면 버튼을 "힌트2 보기"로 바꿔줌 (텍스트 단계만)
+    var hbtn=document.getElementById('hbtn');
     if(s.hint2&&s.mode!=='choice'){
-      var hbtn=document.getElementById('hbtn');
+      // 텍스트 단계이고 힌트2가 있으면 버튼 텍스트 변경
       if(hbtn){hbtn.textContent='💡 힌트2 (추가 -5점)';hbtn.disabled=false;}
     } else {
-      var hbtn2=document.getElementById('hbtn');
-      if(hbtn2)hbtn2.disabled=true;
+      // choice 모드이거나 힌트2가 없으면 버튼 비활성화
+      if(hbtn)hbtn.disabled=true;
     }
+
   } else if(currentHintCount===1&&s.hint2&&s.mode!=='choice'){
     // 힌트2 표시 (객관식 형태)
     G.hcnt[G.si]=2;
