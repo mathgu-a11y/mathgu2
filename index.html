@@ -191,6 +191,26 @@ table.dt td{padding:9px 8px;border-bottom:1px solid #F3F4F6;color:#111;max-width
   </div>
 </div>
 
+<!-- 비밀번호 입력 모달 (대시보드 진입 전) -->
+<div id="s-pw" class="screen">
+  <div class="hdr">
+    <h1>🔐 교사용 대시보드</h1>
+    <p>접근하려면 교사 비밀번호를 입력하세요</p>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>비밀번호</label>
+      <input id="pw-input" type="password" placeholder="비밀번호 입력"
+        autocomplete="off" onkeydown="if(event.key==='Enter')checkPw()">
+    </div>
+    <div id="pw-err" style="display:none;color:#DC2626;font-size:13px;margin-bottom:10px">
+      ❌ 비밀번호가 틀렸습니다. 다시 입력해주세요.
+    </div>
+    <button class="btn-go" onclick="checkPw()">확인</button>
+    <button class="btn-link" onclick="goLogin()">← 돌아가기</button>
+  </div>
+</div>
+
 <div id="s-dash" class="screen">
   <div class="dhead"><h2>📊 교사용 대시보드</h2><button class="bk" onclick="goLogin()">← 돌아가기</button></div>
   <div class="sstrip" id="d-stats"></div>
@@ -204,6 +224,25 @@ table.dt td{padding:9px 8px;border-bottom:1px solid #F3F4F6;color:#111;max-width
   <div class="dbtns">
     <button class="db ds" onclick="clearDash()">🗑 기록 초기화</button>
     <button class="db dp" onclick="exportCSV()">⬇ CSV 다운로드</button>
+  </div>
+  <!-- 비밀번호 변경 -->
+  <div style="margin-top:12px">
+    <details style="background:#fff;border:1px solid #E2E2EC;border-radius:12px;padding:14px">
+      <summary style="font-size:13px;font-weight:700;color:#6B7280;cursor:pointer;user-select:none">🔑 비밀번호 변경</summary>
+      <div style="margin-top:12px;display:grid;gap:8px">
+        <input id="pw-cur" type="password" placeholder="현재 비밀번호"
+          style="width:100%;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:9px;font-size:14px;font-family:inherit;outline:none">
+        <input id="pw-new" type="password" placeholder="새 비밀번호"
+          style="width:100%;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:9px;font-size:14px;font-family:inherit;outline:none">
+        <input id="pw-new2" type="password" placeholder="새 비밀번호 확인"
+          style="width:100%;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:9px;font-size:14px;font-family:inherit;outline:none">
+        <div id="pw-chg-msg" style="font-size:13px;min-height:18px"></div>
+        <button onclick="changePw()"
+          style="padding:10px;background:linear-gradient(135deg,#4338CA,#7C3AED);color:#fff;border:none;border-radius:999px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
+          변경하기
+        </button>
+      </div>
+    </details>
   </div>
 </div>
 
@@ -585,7 +624,7 @@ function renderStep(p,si){
   // 입력 영역
   var inp='';
   if(isChoice){
-    var opts=useFC?p.fc:s.choices;
+    var opts=shufl(useFC?p.fc:s.choices); // ← 선택지 순서 랜덤 섞기
     inp='<div class="chs" id="chswrap">';
     for(var i=0;i<opts.length;i++){
       var v=opts[i].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -674,10 +713,11 @@ function doHint(){
     var prev=area.innerHTML;
     var h2html='<div class="hint-item"><strong>힌트 2</strong> '+s.hint2;
     if(s.h2choices&&s.h2ans){
+      var shuffledH2=shufl(s.h2choices); // ← 힌트2 선택지도 랜덤 섞기
       h2html+='<div class="hint-chs" id="hchswrap">';
-      for(var i=0;i<s.h2choices.length;i++){
-        var hv=s.h2choices[i].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-        h2html+='<button type="button" class="hch" data-v="'+hv+'" onclick="pickHCh(this)">'+s.h2choices[i]+'</button>';
+      for(var i=0;i<shuffledH2.length;i++){
+        var hv=shuffledH2[i].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        h2html+='<button type="button" class="hch" data-v="'+hv+'" onclick="pickHCh(this)">'+shuffledH2[i]+'</button>';
       }
       h2html+='</div>';
     }
@@ -900,7 +940,57 @@ function shareResult(){
   if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){alert('복사되었습니다!');}).catch(function(){prompt('결과를 복사하세요:',t);});}
   else{prompt('결과를 복사하세요:',t);}
 }
-function showDash(){showScreen('s-dash');loadDash();}
+// ── 비밀번호 관련 ──
+var DEFAULT_PW = 'teacher1234'; // 초기 비밀번호
+function getPw(){return localStorage.getItem('dash_pw')||DEFAULT_PW;}
+
+function showDash(){
+  // 비밀번호 입력 화면으로 이동
+  var inp=document.getElementById('pw-input');
+  if(inp)inp.value='';
+  var err=document.getElementById('pw-err');
+  if(err)err.style.display='none';
+  showScreen('s-pw');
+  setTimeout(function(){if(inp)inp.focus();},100);
+}
+
+function checkPw(){
+  var inp=document.getElementById('pw-input');
+  var err=document.getElementById('pw-err');
+  if(!inp)return;
+  if(inp.value===getPw()){
+    inp.value='';
+    if(err)err.style.display='none';
+    showScreen('s-dash');
+    loadDash();
+  } else {
+    if(err)err.style.display='block';
+    inp.value='';
+    inp.focus();
+  }
+}
+
+function changePw(){
+  var cur=document.getElementById('pw-cur').value;
+  var nw=document.getElementById('pw-new').value;
+  var nw2=document.getElementById('pw-new2').value;
+  var msg=document.getElementById('pw-chg-msg');
+  if(cur!==getPw()){
+    msg.style.color='#DC2626';msg.textContent='❌ 현재 비밀번호가 틀렸습니다.';return;
+  }
+  if(!nw||nw.length<4){
+    msg.style.color='#DC2626';msg.textContent='❌ 새 비밀번호는 4자리 이상이어야 합니다.';return;
+  }
+  if(nw!==nw2){
+    msg.style.color='#DC2626';msg.textContent='❌ 새 비밀번호가 일치하지 않습니다.';return;
+  }
+  localStorage.setItem('dash_pw',nw);
+  document.getElementById('pw-cur').value='';
+  document.getElementById('pw-new').value='';
+  document.getElementById('pw-new2').value='';
+  msg.style.color='#059669';msg.textContent='✅ 비밀번호가 변경되었습니다.';
+  setTimeout(function(){msg.textContent='';},3000);
+}
 function loadDash(){
   try{
     var data=JSON.parse(localStorage.getItem('qr')||'[]');
